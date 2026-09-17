@@ -107,11 +107,25 @@ h1 span{background:linear-gradient(90deg,var(--accent),var(--accent2));-webkit-b
 .lead strong{color:var(--fg);font-weight:600}
 .hero .tags{margin-bottom:40px}
 .cta{display:flex;flex-wrap:wrap;gap:12px}
-.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,200px),1fr));gap:12px;margin-top:56px;max-width:900px}
-.stats a{display:block;padding:18px 20px;border:1px solid var(--line);border-radius:16px;background:var(--card);text-decoration:none;transition:transform .3s,border-color .3s}
-.stats a:hover{transform:translateY(-4px);border-color:rgba(124,156,255,.5)}
-.stats b{display:block;font-size:clamp(22px,2.4vw,30px);letter-spacing:-.02em;font-variant-numeric:tabular-nums;background:linear-gradient(90deg,var(--accent),var(--accent2));-webkit-background-clip:text;background-clip:text;color:transparent}
-.stats small{display:block;color:var(--muted);font-size:13px;margin-top:4px}
+/* 첫 화면 전광판: 한 번에 숫자 하나, 탭으로 전환 */
+.stats{position:relative;margin-top:56px;max-width:900px;padding:clamp(22px,3vw,32px) clamp(22px,3.5vw,36px);border:1px solid var(--line);border-radius:20px;background:var(--card);overflow:hidden}
+.stats::before{content:"";position:absolute;left:8%;top:58%;width:min(70%,560px);height:min(60vw,260px);transform:translateY(-50%);background:radial-gradient(closest-side,rgba(124,156,255,.26),rgba(201,143,255,.12) 55%,transparent 78%);filter:blur(24px);pointer-events:none}
+.stats>*{position:relative}
+.stat-tabs{display:flex;flex-wrap:wrap;gap:6px}
+.stat-tab{font:inherit;font-size:13px;font-weight:600;padding:7px 14px;border-radius:999px;border:1px solid var(--line);background:transparent;color:var(--muted);cursor:pointer;transition:color .2s,border-color .2s,background .2s}
+.stat-tab:hover{color:var(--fg);border-color:rgba(255,255,255,.3)}
+.stat-tab[aria-selected="true"]{background:var(--fg);color:var(--bg);border-color:var(--fg)}
+.stat-panels{display:grid;margin-top:22px}
+.stat-panel{grid-area:1/1;display:flex;flex-direction:column;align-items:flex-start}
+.stat-panel:not(.on){visibility:hidden;opacity:0;pointer-events:none}
+.stat-panel.on{animation:statIn .45s cubic-bezier(.2,.8,.2,1)}
+.stat-pre{font-size:clamp(14px,1.6vw,17px);color:var(--muted);font-weight:500}
+.stat-num{font-size:clamp(56px,9vw,112px);font-weight:800;letter-spacing:-.06em;line-height:.95;font-variant-numeric:tabular-nums;white-space:nowrap;margin-top:4px}
+.stat-num em{font-style:normal;font-size:.32em;font-weight:600;color:var(--muted);letter-spacing:-.02em;margin-left:.08em}
+.stat-story{max-width:34em;margin-top:14px;font-size:15px;color:var(--muted)}
+.stat-link{margin-top:14px;font-size:14px;font-weight:600;color:var(--accent);text-decoration:none}
+.stat-link:hover{text-decoration:underline}
+@keyframes statIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
 
 /* 포트폴리오: 카드 */
 .filters{display:flex;flex-wrap:wrap;gap:8px;margin:-24px 0 32px}
@@ -311,6 +325,35 @@ $('.tile img, .thumb img').forEach(img => {
   if (img.complete) { img.naturalWidth > 0 ? mark() : broken(); }
   img.addEventListener('load', mark); img.addEventListener('error', broken);
 });
+
+/* 9. 첫 화면 전광판: 탭으로 숫자 하나씩 (클릭 · 방향키 · Home · End) */
+const statTabs = [...$('.stat-tab')];
+if (statTabs.length) {
+  const panels = statTabs.map(t => document.getElementById(t.getAttribute('aria-controls')));
+  const pick = (i, focus) => {
+    statTabs.forEach((t, j) => {
+      const on = j === i;
+      t.setAttribute('aria-selected', on ? 'true' : 'false');
+      t.tabIndex = on ? 0 : -1;
+      panels[j].classList.toggle('on', on);
+      panels[j].setAttribute('aria-hidden', on ? 'false' : 'true');
+      $('a', panels[j]).forEach(a => a.tabIndex = on ? 0 : -1);
+    });
+    if (focus) statTabs[i].focus();
+  };
+  statTabs.forEach((t, i) => {
+    t.addEventListener('click', () => pick(i, false));
+    t.addEventListener('keydown', e => {
+      const n = statTabs.length;
+      if (e.key === 'ArrowRight') pick((i + 1) % n, true);
+      else if (e.key === 'ArrowLeft') pick((i - 1 + n) % n, true);
+      else if (e.key === 'Home') pick(0, true);
+      else if (e.key === 'End') pick(n - 1, true);
+      else return;
+      e.preventDefault();
+    });
+  });
+}
 `;
 
 function buildIndex() {
@@ -401,7 +444,17 @@ ${url ? `<meta property="og:url" content="${esc(url)}">\n<link rel="canonical" h
         <a class="btn ghost" href="${esc(S.resume.file)}" download${S.resume.ready ? '' : ' hidden'}>이력서 다운로드</a>
       </div>
       <div class="stats reveal">
-        ${I.metrics.map((m) => `<a href="projects/${m.slug}/"><b>${esc(m.num)}</b><small>${esc(m.desc)}</small></a>`).join('\n        ')}
+        <div class="stat-tabs" role="tablist" aria-label="대표 성과">
+          ${I.metrics.map((m, i) => `<button class="stat-tab" type="button" role="tab" id="stat-tab-${i}" aria-selected="${i === 0}" aria-controls="stat-panel-${i}"${i ? ' tabindex="-1"' : ''}>${esc(m.label)}</button>`).join('')}
+        </div>
+        <div class="stat-panels">
+          ${I.metrics.map((m, i) => `<div class="stat-panel${i === 0 ? ' on' : ''}" role="tabpanel" id="stat-panel-${i}" aria-labelledby="stat-tab-${i}" aria-hidden="${i !== 0}">
+            <p class="stat-pre">${esc(m.pre)}</p>
+            <p class="stat-num">${esc(m.num)}<em>${esc(m.unit)}</em></p>
+            <p class="stat-story">${esc(m.story)}</p>
+            <a class="stat-link" href="projects/${m.slug}/"${i ? ' tabindex="-1"' : ''}>자세히 보기 →</a>
+          </div>`).join('\n          ')}
+        </div>
       </div>
     </div>
   </section>
