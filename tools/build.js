@@ -571,7 +571,7 @@ function section(id, title, items, kind, slug) {
   if (!items || !items.length) return '';
   let body;
   if (kind === 'results') {
-    body = `<ul class="result-list">${items.map((r) => `<li><b>${r.b}</b><span class="basis">${r.basis}</span></li>`).join('')}</ul>`;
+    body = `<ul class="result-list">${items.map((r) => `<li><b>${r.b}</b>${r.basis ? `<span class="basis">${r.basis}</span>` : ''}</li>`).join('')}</ul>`;
   } else if (kind === 'gallery') {
     body = `<div class="gallery">${items.map((g, i) => `<figure class="thumb"><img src="../../images/${slug}-${i + 1}.jpg" alt="${esc(g)}" loading="lazy" width="1200" height="900"><figcaption><b>${esc(g)}</b>이미지 준비 중</figcaption></figure>`).join('')}</div>`;
   } else if (kind === 'p') {
