@@ -415,7 +415,7 @@ function buildIndex() {
         </article>`;
   }).join('\n');
 
-  const stack = `<ul class="stack">${['Photoshop','Illustrator','CapCut','Gemini · ChatGPT · Claude','인스타그램','네이버 블로그','Meta Ads','네이버 검색광고','Excel','Notion','HTML / CSS / JS','React · Next.js','Expo','Claude Code'].map((x) => `<li>${x}</li>`).join('')}</ul>`;
+  const stack = `<ul class="stack">${(C.stack || ['Photoshop','Illustrator','CapCut','Gemini · ChatGPT · Claude','인스타그램','네이버 블로그','Meta Ads','네이버 검색광고','Excel','Notion','HTML / CSS / JS','React · Next.js','Expo','Claude Code']).map((x) => `<li>${x}</li>`).join('')}</ul>`;
   const career = C.about.history.filter((h) => /필국제무역|행정조교/.test(h.title));
   const edu = C.about.history.filter((h) => !/필국제무역|행정조교/.test(h.title));
   const tl = (arr) => arr.map((h) => `<li><time>${esc(h.time)}</time><strong>${esc(h.title)}${h.award ? `<span class="award">${esc(h.award)}</span>` : ''}</strong>${h.org ? `<p>${esc(h.org.split(' · ')[0])}</p>` : ''}</li>`).join('');
@@ -459,9 +459,9 @@ ${url ? `<meta property="og:url" content="${esc(url)}">\n<link rel="canonical" h
     <div class="blob b1" data-speed="0.35"></div>
     <div class="blob b2" data-speed="-0.2"></div>
     <div class="wrap">
-      <p class="eyebrow reveal">Marketer · ${esc(S.name)}</p>
+      <p class="eyebrow reveal">${esc(S.roleEn || 'Marketer')} · ${esc(S.name)}</p>
       <h1 class="reveal">고객의 말을<br><span>콘텐츠로 번역</span>하는<br>마케터입니다.</h1>
-      <p class="lead reveal">7년간 하루 평균 50건의 고객 문의를 들었고, 그 데이터로 SNS 팔로워를 10개월 만에 10배로 키웠습니다.</p>
+      <p class="lead reveal">${I.lead || '7년간 하루 평균 50건의 고객 문의를 들었고, 그 데이터로 SNS 팔로워를 10개월 만에 10배로 키웠습니다.'}</p>
       <ul class="tags reveal">${I.keywords.map((k) => `<li>${esc(k)}</li>`).join('')}</ul>
       <div class="cta reveal">
         <a class="btn primary" href="#portfolio">포트폴리오 보기 →</a>
@@ -506,7 +506,7 @@ ${cards}
     <div class="wm" data-speed="0.15" aria-hidden="true">ABOUT</div>
     <div class="wrap">
       <h2 class="reveal">About</h2>
-      <p class="sub reveal">운영 → CS → 영업지원 → SNS · 광고까지, 고객 접점에서 얻은 데이터로 콘텐츠를 만듭니다.</p>
+      <p class="sub reveal">${C.about.oneLiner || '운영 → CS → 영업지원 → SNS · 광고까지, 고객 접점에서 얻은 데이터로 콘텐츠를 만듭니다.'}</p>
       <div class="cols stagger">
         <div class="panel reveal">
           <h3>경력</h3>
