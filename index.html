@@ -74,21 +74,28 @@ h1 span{background:linear-gradient(90deg,var(--accent),var(--accent2));-webkit-b
 .stats{position:relative;margin-top:56px;max-width:900px;padding:clamp(22px,3vw,32px) clamp(22px,3.5vw,36px);border:1px solid var(--line);border-radius:20px;background:var(--card);overflow:hidden}
 .stats::before{content:"";position:absolute;left:8%;top:58%;width:min(70%,560px);height:min(60vw,260px);transform:translateY(-50%);background:radial-gradient(closest-side,rgba(124,156,255,.26),rgba(201,143,255,.12) 55%,transparent 78%);filter:blur(24px);pointer-events:none}
 .stats>*{position:relative}
-.stat-tabs{display:flex;flex-wrap:wrap;gap:6px}
-.stat-tab{font:inherit;font-size:13px;font-weight:600;padding:7px 14px;border-radius:999px;border:1px solid var(--line);background:transparent;color:var(--muted);cursor:pointer;transition:color .2s,border-color .2s,background .2s}
-.stat-tab:hover{color:var(--fg);border-color:rgba(255,255,255,.3)}
-.stat-tab[aria-selected="true"]{background:var(--fg);color:var(--bg);border-color:var(--fg)}
-.stat-panels{display:grid;margin-top:22px}
+.stat-panels{display:grid}
 .stat-panel{grid-area:1/1;display:flex;flex-direction:column;align-items:flex-start}
 .stat-panel:not(.on){visibility:hidden;opacity:0;pointer-events:none}
-.stat-panel.on{animation:statIn .45s cubic-bezier(.2,.8,.2,1)}
+.stat-panel.on{animation:statIn .6s cubic-bezier(.2,.8,.2,1)}
+.stat-label{font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--accent)}
+/* 슬라이드 위치 점: 클릭하면 그 슬라이드로, 활성 점은 길어지면서 남은 시간을 채워 보여줌 */
+.stat-dots{display:flex;gap:8px;margin-top:22px}
+.stat-dot{position:relative;width:8px;height:8px;padding:0;border:0;border-radius:999px;background:rgba(255,255,255,.22);cursor:pointer;overflow:hidden;transition:width .3s,background .3s}
+.stat-dot:hover{background:rgba(255,255,255,.45)}
+.stat-dot[aria-selected="true"]{width:40px;background:rgba(255,255,255,.22)}
+.stat-dot[aria-selected="true"]::after{content:"";position:absolute;inset:0;background:var(--fg);transform-origin:left;transform:scaleX(0);animation:statFill var(--stat-ms,5000ms) linear forwards}
+.stats.paused .stat-dot[aria-selected="true"]::after{animation-play-state:paused}
+.stat-dot:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+@keyframes statFill{to{transform:scaleX(1)}}
 .stat-pre{font-size:clamp(14px,1.6vw,17px);color:var(--muted);font-weight:500}
 .stat-num{font-size:clamp(56px,9vw,112px);font-weight:800;letter-spacing:-.06em;line-height:.95;font-variant-numeric:tabular-nums;white-space:nowrap;margin-top:4px}
 .stat-num em{font-style:normal;font-size:.32em;font-weight:600;color:var(--muted);letter-spacing:-.02em;margin-left:.08em}
 .stat-story{max-width:34em;margin-top:14px;font-size:15px;color:var(--muted)}
 .stat-link{margin-top:14px;font-size:14px;font-weight:600;color:var(--accent);text-decoration:none}
 .stat-link:hover{text-decoration:underline}
-@keyframes statIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+@keyframes statIn{from{opacity:0;transform:translateX(28px)}to{opacity:1;transform:none}}
+@media(prefers-reduced-motion:reduce){.stat-panel.on{animation:none}.stat-dot[aria-selected="true"]::after{animation:none;transform:none}}
 
 /* 포트폴리오: 카드 */
 .filters{display:flex;flex-wrap:wrap;gap:8px;margin:-24px 0 32px}
@@ -218,29 +225,32 @@ dialog .cap a{color:var(--accent);text-decoration:none}
         <a class="btn ghost" href="mailto:whtndls5@naver.com">이메일 보내기</a>
         <a class="btn ghost" href="resume.pdf" download hidden>이력서 다운로드</a>
       </div>
-      <div class="stats reveal">
-        <div class="stat-tabs" role="tablist" aria-label="대표 성과">
-          <button class="stat-tab" type="button" role="tab" id="stat-tab-0" aria-selected="true" aria-controls="stat-panel-0">공식 SNS 팔로워</button><button class="stat-tab" type="button" role="tab" id="stat-tab-1" aria-selected="false" aria-controls="stat-panel-1" tabindex="-1">공동구매 운영</button><button class="stat-tab" type="button" role="tab" id="stat-tab-2" aria-selected="false" aria-controls="stat-panel-2" tabindex="-1">네이버 AI 브리핑 인용</button>
-        </div>
-        <div class="stat-panels">
+      <div class="stats reveal" style="--stat-ms:5000ms">
+        <div class="stat-panels" aria-live="polite">
           <div class="stat-panel on" role="tabpanel" id="stat-panel-0" aria-labelledby="stat-tab-0" aria-hidden="false">
+            <p class="stat-label">공식 SNS 팔로워</p>
             <p class="stat-pre">1,000명에서</p>
             <p class="stat-num">10,000<em>명</em></p>
             <p class="stat-story">정보 전달 창구였던 공식 채널을 고객과 소통하고 구매로 이어지는 채널로 바꿨습니다. 10개월 만에 팔로워가 10배가 됐습니다.</p>
             <a class="stat-link" href="projects/sns-channel/">자세히 보기 →</a>
           </div>
           <div class="stat-panel" role="tabpanel" id="stat-panel-1" aria-labelledby="stat-tab-1" aria-hidden="true">
+            <p class="stat-label">공동구매 운영</p>
             <p class="stat-pre">20개월 동안 약</p>
             <p class="stat-num">90<em>회</em></p>
             <p class="stat-story">약 90회를 운영하는 동안 결품이나 배송 클레임이 한 건도 없었습니다. 최고 회차 매출은 1,000만 원대입니다.</p>
             <a class="stat-link" href="projects/group-buying/" tabindex="-1">자세히 보기 →</a>
           </div>
           <div class="stat-panel" role="tabpanel" id="stat-panel-2" aria-labelledby="stat-tab-2" aria-hidden="true">
+            <p class="stat-label">네이버 AI 브리핑 인용</p>
             <p class="stat-pre">8개월 누적</p>
             <p class="stat-num">10,000<em>회</em></p>
             <p class="stat-story">검색 유입이 AI 답변에 인용되는 쪽으로 바뀌는 변화를 개인 블로그로 먼저 검증했습니다. 8개월 만에 인용이 10,000회를 넘었습니다.</p>
             <a class="stat-link" href="projects/ai-blog/" tabindex="-1">자세히 보기 →</a>
           </div>
+        </div>
+        <div class="stat-dots" role="tablist" aria-label="대표 성과 슬라이드">
+          <button class="stat-dot" type="button" role="tab" id="stat-tab-0" aria-selected="true" aria-controls="stat-panel-0" aria-label="공식 SNS 팔로워"></button><button class="stat-dot" type="button" role="tab" id="stat-tab-1" aria-selected="false" aria-controls="stat-panel-1" aria-label="공동구매 운영" tabindex="-1"></button><button class="stat-dot" type="button" role="tab" id="stat-tab-2" aria-selected="false" aria-controls="stat-panel-2" aria-label="네이버 AI 브리핑 인용" tabindex="-1"></button>
         </div>
       </div>
     </div>
@@ -536,11 +546,16 @@ $('.tile img, .thumb img').forEach(img => {
   img.addEventListener('load', mark); img.addEventListener('error', broken);
 });
 
-/* 9. 첫 화면 전광판: 탭으로 숫자 하나씩 (클릭 · 방향키 · Home · End) */
-const statTabs = [...$('.stat-tab')];
+/* 9. 첫 화면 전광판: 자동으로 넘어가는 슬라이드 (점 클릭 · 방향키 · Home · End 로도 이동) */
+const statTabs = [...$('.stat-dot')];
 if (statTabs.length) {
+  const box = statTabs[0].closest('.stats');
   const panels = statTabs.map(t => document.getElementById(t.getAttribute('aria-controls')));
+  const ms = parseInt(getComputedStyle(box).getPropertyValue('--stat-ms')) || 5000;
+  const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let cur = 0, timer;
   const pick = (i, focus) => {
+    cur = i;
     statTabs.forEach((t, j) => {
       const on = j === i;
       t.setAttribute('aria-selected', on ? 'true' : 'false');
@@ -550,7 +565,20 @@ if (statTabs.length) {
       $('a', panels[j]).forEach(a => a.tabIndex = on ? 0 : -1);
     });
     if (focus) statTabs[i].focus();
+    restart();
   };
+  const restart = () => {
+    clearTimeout(timer);
+    if (!still && !box.classList.contains('paused')) timer = setTimeout(() => pick((cur + 1) % statTabs.length, false), ms);
+  };
+  // 마우스 올리거나 키보드 포커스가 있거나 탭이 안 보이면 멈춤
+  const pause = () => { box.classList.add('paused'); clearTimeout(timer); };
+  const resume = () => { box.classList.remove('paused'); restart(); };
+  box.addEventListener('mouseenter', pause);
+  box.addEventListener('mouseleave', resume);
+  box.addEventListener('focusin', pause);
+  box.addEventListener('focusout', e => { if (!box.contains(e.relatedTarget)) resume(); });
+  document.addEventListener('visibilitychange', () => document.hidden ? pause() : resume());
   statTabs.forEach((t, i) => {
     t.addEventListener('click', () => pick(i, false));
     t.addEventListener('keydown', e => {
@@ -563,6 +591,7 @@ if (statTabs.length) {
       e.preventDefault();
     });
   });
+  restart();
 }
 
 /* 카드 하단의 추가 영상 링크 */
