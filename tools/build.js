@@ -622,6 +622,7 @@ function buildProject(p, idx) {
       ${section('strategy', '전략', D.strategy)}
       ${section('execution', '실행', D.execution)}
       ${section('results', '성과', D.results, 'results')}
+      ${D.figures && D.figures.length ? `<div class="shots">${D.figures.map((f) => `<figure class="shot"><img src="${rel}images/${f.file}" alt="${esc(f.caption)}" loading="lazy"><figcaption>${esc(f.caption)}</figcaption></figure>`).join('')}</div>` : ''}
       ${D.limits ? `<p class="callout"><strong>측정 기준과 한계.</strong> ${D.limits}</p>` : ''}
       ${section('retro', '회고', D.retro)}
       ${section('gallery', '결과물', D.gallery, 'gallery', p.slug)}
