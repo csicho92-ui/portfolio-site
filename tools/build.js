@@ -460,7 +460,7 @@ ${url ? `<meta property="og:url" content="${esc(url)}">\n<link rel="canonical" h
     <div class="blob b1" data-speed="0.35"></div>
     <div class="blob b2" data-speed="-0.2"></div>
     <div class="wrap">
-      <p class="eyebrow reveal">Content Marketer · ${esc(S.name)}</p>
+      <p class="eyebrow reveal">Marketer · ${esc(S.name)}</p>
       <h1 class="reveal">고객의 말을<br><span>콘텐츠로 번역</span>하는<br>마케터입니다.</h1>
       <p class="lead reveal">7년간 하루 50건의 고객 문의를 들었고, 그 데이터로 SNS 팔로워를 10개월 만에 10배로 키웠습니다.</p>
       <ul class="tags reveal">${I.keywords.map((k) => `<li>${esc(k)}</li>`).join('')}</ul>
@@ -538,7 +538,7 @@ ${cards}
       <h2 class="reveal">Contact</h2>
       <p class="sub reveal">포지션 이야기, 자료 요청, 커피챗 모두 환영합니다. 보통 당일 안에 답장합니다.</p>
       <div class="clist stagger">
-        <a class="reveal" href="mailto:${esc(S.email)}?subject=${encodeURIComponent('[채용] 조수인 콘텐츠 마케터 포지션 관련')}"><span>✉️</span><strong>이메일 보내기</strong><small>${esc(S.email)}</small></a>
+        <a class="reveal" href="mailto:${esc(S.email)}?subject=${encodeURIComponent('[채용] 조수인 마케터 포지션 관련')}"><span>✉️</span><strong>이메일 보내기</strong><small>${esc(S.email)}</small></a>
         <button class="reveal" type="button" id="copy-email" data-email="${esc(S.email)}"><span>📋</span><strong>이메일 복사</strong><small>클립보드에 주소 복사</small></button>
         ${S.channels.map((c) => `<a class="reveal" href="${esc(c.url)}" target="_blank" rel="noopener" title="새 창에서 열림"><span>${c.icon === 'blog' ? '✍️' : '🗂️'}</span><strong>${esc(c.label)}</strong><small>${esc(c.sub)}</small></a>`).join('\n        ')}
         <a class="reveal" href="${esc(S.resume.file)}" download${S.resume.ready ? '' : ' hidden'}><span>📄</span><strong>이력서</strong><small>PDF 다운로드</small></a>

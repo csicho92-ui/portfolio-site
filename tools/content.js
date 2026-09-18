@@ -9,7 +9,7 @@ const TODO = (t) => `<span class="todo">[입력 필요: ${t}]</span>`;
 module.exports = {
   site: {
     name: '조수인',
-    role: '콘텐츠 마케터',
+    role: '마케터',
     email: 'whtndls5@naver.com',
     baseUrl: '',                 // 배포 주소가 정해지면 'https://…' 로 (공유 미리보기용)
     resume: { file: 'resume.pdf', ready: false },   // PDF를 넣은 뒤 ready: true 로
