@@ -611,7 +611,7 @@ function buildProject(p, idx) {
         <div><dt>역할</dt><dd>${esc(p.role)}</dd></div>
         <div><dt>핵심 결과</dt><dd class="big">${D.summaryResult}</dd></div>
       </dl>
-      <div class="hero-figure">${thumb(p, rel, true)}</div>
+      ${p.heroImage ? `<div class="hero-figure">${thumb(p, rel, true)}</div>` : ''}
     </header>
 
     <article class="article">
