@@ -161,16 +161,17 @@ h1 span{background:linear-gradient(90deg,var(--accent),var(--accent2));-webkit-b
 .tile.has-img .num,.tile.has-img .k{text-shadow:0 2px 12px rgba(0,0,0,.7)}
 .tile.has-img::after{content:"";position:absolute;inset:0;background:linear-gradient(transparent 40%,rgba(0,0,0,.7))}
 .tile.has-img .num{z-index:1}
-.body{padding:20px 24px 24px;display:flex;flex-direction:column;gap:12px;flex:1}
+.body{padding:20px 24px 24px;display:flex;flex-direction:column;gap:12px;flex:1;text-decoration:none;color:inherit}
+.body .more{margin-top:auto;padding-top:8px;font-size:14px;font-weight:600;color:var(--muted);transition:color .2s}
+.card:hover .body .more,.body:focus-visible .more{color:var(--accent)}
+.body:focus-visible{outline:2px solid var(--accent);outline-offset:-2px}
 .kind{display:inline-flex;align-items:center;gap:8px;font-size:12px;color:var(--muted)}
 .kind i{font-style:normal;padding:2px 8px;border-radius:999px;border:1px solid rgba(124,156,255,.35);background:rgba(124,156,255,.1);color:var(--accent);font-weight:600}
 .kind i.personal{border-color:rgba(255,196,102,.35);background:rgba(255,196,102,.1);color:#ffc466}
 .kind i.contest{border-color:rgba(255,128,171,.35);background:rgba(255,128,171,.1);color:#ff80ab}
 .kind i.study{border-color:rgba(201,143,255,.35);background:rgba(201,143,255,.1);color:var(--accent2)}
 .card h3{font-size:20px;line-height:1.3}
-.card h3 a{text-decoration:none}
-.card h3 a:hover{color:var(--accent)}
-.desc{color:var(--muted);font-size:15px}
+.card:hover h3{color:var(--accent)}
 .role{font-size:13px;color:var(--accent)}
 .result{font-size:14px;font-weight:600;color:var(--fg);padding-left:12px;border-left:2px solid var(--accent)}
 .result small{display:block;color:var(--muted);font-size:12px;margin-top:2px}
@@ -401,18 +402,16 @@ function buildIndex() {
             <span class="k">${esc(p.fieldLabel)}</span>
             <span class="num"><b>${esc(p.thumbTitle)}</b><small>${esc(p.thumbSub)}</small></span>
           </a>`;
-    const extra = (p.videos || []).slice(1).map((v) => `<a href="#" data-yt="${v.id}" data-title="${esc(strip(p.short))} — ${esc(v.label)}" data-url="${ytUrl(v.id)}" class="thumb-link">${esc(v.label)} ▶</a>`).join('');
-    const ext = (p.links || []).filter((l) => !/노션 원본|숏폼 예시|수상작 영상|숏폼 ·/.test(l.label)).map((l) => `<a href="${esc(l.url)}" target="_blank" rel="noopener" title="새 창에서 열림">${esc(l.label)} ↗</a>`).join('');
+    // 카드는 제목 + 결과 한 줄만. 설명 · 외부 링크는 상세 페이지에서. 본문 전체가 상세로 가는 링크
     return `
         <article class="card reveal${p.featured ? ' featured' : ''}" data-field="${p.field}">
           ${media}
-          <div class="body">
+          <a class="body" href="projects/${p.slug}/">
             <p class="kind"><i class="${kindClass[p.kind]}">${esc(p.kindLabel)}</i><span>${esc(p.period)}</span></p>
-            <h3><a href="projects/${p.slug}/">${esc(p.short)}</a></h3>
-            <p class="desc">${esc(p.hook)}</p>
+            <h3>${esc(p.short)}</h3>
             <p class="result">${esc(p.resultShort)}</p>
-            <p class="links"><a class="more" href="projects/${p.slug}/">자세히 보기 →</a>${extra}${ext}</p>
-          </div>
+            <span class="more">자세히 보기 →</span>
+          </a>
         </article>`;
   }).join('\n');
 
