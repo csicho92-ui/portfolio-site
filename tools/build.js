@@ -460,7 +460,7 @@ ${url ? `<meta property="og:url" content="${esc(url)}">\n<link rel="canonical" h
     <div class="blob b2" data-speed="-0.2"></div>
     <div class="wrap">
       <p class="eyebrow reveal">${esc(S.roleEn || 'Marketer')} · ${esc(S.name)}</p>
-      <h1 class="reveal">고객의 말을<br><span>콘텐츠로 번역</span>하는<br>마케터입니다.</h1>
+      <h1 class="reveal">${I.h1 || '고객의 말을<br><span>콘텐츠로 번역</span>하는<br>마케터입니다.'}</h1>
       <p class="lead reveal">${I.lead || '7년간 하루 평균 50건의 고객 문의를 들었고, 그 데이터로 SNS 팔로워를 10개월 만에 10배로 키웠습니다.'}</p>
       <ul class="tags reveal">${I.keywords.map((k) => `<li>${esc(k)}</li>`).join('')}</ul>
       <div class="cta reveal">
